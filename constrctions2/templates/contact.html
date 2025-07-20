@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Contact Us</h1>
+    <p class="text-center mb-4">
+        Have questions or need assistance? Feel free to reach out to us. We'd love to hear from you!
+    </p>
+
+    <div class="row">
+        <!-- Contact Information -->
+        <div class="col-md-6 mb-4">
+            <h3>Our Address</h3>
+            <p>
+                <strong>Office:</strong> Mumbai Rohan Constructions Company<br>
+                <strong>Email:</strong> contact@mywebsite.com<br>
+                <strong>Phone:</strong> +123 456 7890<br>
+            </p>
+            <h3>Follow Us</h3>
+            <a href="https://facebook.com" class="text-primary me-3" target="_blank">
+                <i class="bi bi-facebook" style="font-size: 24px;"></i>
+            </a>
+            <a href="https://instagram.com" class="text-danger me-3" target="_blank">
+                <i class="bi bi-instagram" style="font-size: 24px;"></i>
+            </a>
+            <a href="https://youtube.com" class="text-danger" target="_blank">
+                <i class="bi bi-youtube" style="font-size: 24px;"></i>
+            </a>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-md-6">
+            <h3>Send Us a Message</h3>
+            <form method="post" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Your Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter the subject" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Type your message here" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}About Us - Interior Design Company{% endblock %}
+
+{% block content %}
+
+<head>
+    <style>
+        /* General Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            opacity: 0;
+            animation: slideIn 0.5s forwards;
+        }
+
+        /* Modal Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Main Section (Design Ideas) */
+        .m1 {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .t1 p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .d1 {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .d1 div {
+            width: 45%;
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .d1 img {
+            width: 100%;
+            height: auto;
+            max-width: 500px;
+            border-radius: 8px;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .d1 div:hover img {
+            transform: scale(1.1);
+        }
+
+        .d1 h2 {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            color: #333;
+        }
+
+        /* Experience Center Section */
+        .m2 {
+            background-color: #f2f2f2;
+            padding: 60px 20px;
+        }
+
+        .m2 h2 {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        /* Call to Action Section */
+        .m-last {
+            background-color: #4CAF50;
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .m-last h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .m-last button {
+            background-color: white;
+            color: #4CAF50;
+            font-size: 1rem;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .m-last button:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Page Header -->
+    <div class="content">
+        <h1>DESIGN IDEAS</h1>
+    </div>
+
+    <!-- Main Design Ideas Section -->
+    <div class="m1">
+        <div class="t1">
+            <p>Explore how your dream home can come to life! Get inspiration from our catalog of modular kitchens, living rooms, bedrooms, wardrobes, and more...</p>
+        </div>
+
+        <!-- Design Options -->
+        <div class="d1">
+            <div onclick="showModal('Living Room', 'This is a spacious living room design with modern furniture and a cozy atmosphere. Perfect for family gatherings and relaxation.', '$2000')">
+                <img src="{% static 'source/design-m1-1.jpg' %}" alt="Living Room">
+                <h2>Living Room</h2>
+            </div>
+            <div onclick="showModal('Kitchen', 'A modular kitchen design that offers maximum storage and modern appliances, creating the perfect cooking environment.', '$1500')">
+                <img src="{% static 'source/design-m1-2.png' %}" alt="Kitchen">
+                <h2>Kitchen</h2>
+            </div>
+        </div>
+
+        <div class="d1">
+            <div onclick="showModal('Master Bedroom', 'This master bedroom design provides a luxurious feel with a large bed, comfortable seating, and a calming color palette.', '$2500')">
+                <img src="{% static 'source/design-m1-3.jpg' %}" alt="Master Bedroom">
+                <h2>Master Bedroom</h2>
+            </div>
+            <div onclick="showModal('Dining Room', 'A stylish dining room with a modern dining table, perfect for family meals or hosting guests.', '$1200')">
+                <img src="{% static 'source/design-m1-4.png' %}" alt="Dining Room">
+                <h2>Dining Room</h2>
+            </div>
+        </div>
+
+        <div class="d1">
+            <div onclick="showModal('Kids Bedroom', 'A vibrant and playful kids bedroom design with colorful decor and fun furniture.', '$1300')">
+                <img src="{% static 'source/design-m1-5.jpg' %}" alt="Kids Bedroom">
+                <h2>Kids Bedroom</h2>
+            </div>
+            <div onclick="showModal('Bathroom', 'A modern bathroom design featuring sleek tiles, a luxurious shower area, and ample space for storage.', '$800')">
+                <img src="{% static 'source/design-m1-6.png' %}" alt="Bathroom">
+                <h2>Bathroom</h2>
+            </div>
+        </div>
+
+        <div class="d1">
+            <div onclick="showModal('Wardrobe', 'A spacious wardrobe design offering ample storage space with elegant finishes and functional layout.', '$700')">
+                <img src="{% static 'source/design-m1-7.png' %}" alt="Wardrobe">
+                <h2>Wardrobe</h2>
+            </div>
+            <div onclick="showModal('Pooja Room', 'A serene Pooja Room design that offers a peaceful environment for worship with beautiful decor.', '$1000')">
+                <img src="{% static 'source/design-m1-8.png' %}" alt="Pooja Room">
+                <h2>Pooja Room</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalDescription"></p>
+            <p><strong>Price: </strong><span id="modalPrice"></span></p>
+        </div>
+    </div>
+
+   
+    <!-- Back to top button functionality -->
+    <script>
+        function totop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show modal with information and price
+        function showModal(title, description, price) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDescription").innerText = description;
+            document.getElementById("modalPrice").innerText = price;
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        // Button navigation function
+        function btn(url) {
+            window.location.href = url;
+        }
+    </script>
+
+{% endblock %}
