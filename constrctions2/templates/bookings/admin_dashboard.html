@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% load humanize %}  <!-- Load the humanize module to enable intcomma filter -->
+
+{% block content %}
+    <div class="container">
+        <h2>Admin Dashboard</h2>
+
+        <!-- Search Form with a single search bar and a payment status dropdown -->
+        <form method="get" action="">
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="search_query" placeholder="Search by Project Name, Client Name, or Budget" value="{{ request.GET.search_query }}">
+                </div>
+                <!-- <div class="col-md-2">
+                    <select class="form-control" name="payment_status">
+                        <option value="">All Payment Status</option>
+                        <option value="pending" {% if request.GET.payment_status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="completed" {% if request.GET.payment_status == 'completed' %}selected{% endif %}>Completed</option>
+                        <option value="failed" {% if request.GET.payment_status == 'failed' %}selected{% endif %}>Failed</option>
+                    </select>
+                </div> -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+
+        {% if bookings %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Client Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Budget</th>
+                        <!-- <th>Remaining Payment</th> -->
+                        <th>Booking Date</th>
+                        <!-- <th>Payment Status</th>
+                        <th>First Payment</th>
+                        <th>Second Payment</th> Added column for second payment -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.project.project_name }}</td>
+                            <td>{{ booking.name }}</td>
+                            <td>{{ booking.phone }}</td>
+                            <td>{{ booking.address }}</td>
+                            <td>${{ booking.budget|intcomma }}</td>
+                            <!-- <td>${{ booking.remaining_balance|floatformat:2|intcomma }}</td> -->
+                            <td>{{ booking.created_at|date:"Y-m-d H:i" }}</td>
+                            <!-- <td>
+                                {% if booking.payment_status == 'pending' %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% elif booking.payment_status == 'completed' %}
+                                    <span class="badge bg-success">Completed</span>
+                                {% elif booking.payment_status == 'failed' %}
+                                    <span class="badge bg-danger">Failed</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Unknown</span>
+                                {% endif %}
+                            </td> -->
+                            
+                            <!-- First Payment Button -->
+                            <!-- <td>
+                                <button type="button" id="rzp-button1" class="cta-button">
+                                    Proceed to First Payment - ${{ booking.first_instrument_amount|floatformat:2|intcomma }}
+                                </button>
+                            </td> -->
+
+                            <!-- Second Payment Button: Show only if first payment is completed -->
+                            <!-- {% if booking.payment_status == 'completed' %}
+                                <td>
+                                    <button type="button" id="rzp-button2" class="cta-button">
+                                        Proceed to Second Payment - ${{ booking.second_instrument_amount|floatformat:2|intcomma }}
+                                    </button>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <span class="text-muted">Awaiting First Payment</span>
+                                </td>
+                            {% endif %} -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No bookings available.</p>
+        {% endif %}
+    </div>
+{% endblock %}

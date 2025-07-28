@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>Book Now for Project: {{ project.project_name }}</h2>
+    <p>Price per unit: <strong>${{ multiplied_price }}</strong></p>
+
+    <!-- Display Success Message if present -->
+    {% if messages %}
+        <div class="alert alert-success" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'booking:booking_submit' %}">
+        {% csrf_token %}
+        <input type="hidden" name="project_id" value="{{ project.id }}">
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Client Name</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea name="address" id="address" class="form-control" rows="4" placeholder="Enter address" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter phone number" required>
+        </div>
+
+        <!-- Payment Buttons
+        <button type="button" id="rzp-button1" class="cta-button">Proceed to First Payment</button>
+        <button type="button" id="rzp-button2" class="cta-button" >Proceed to Second Payment</button> -->
+
+        <!-- Submit Booking Button -->
+        <button type="submit" class="btn btn-primary" id="submit-booking" >Submit Booking</button>
+    </form>
+</div>
+
+<script type="text/javascript">
+    // Initialize Razorpay payment for both buttons
+    function initiateRazorpayPayment(buttonId, amountMultiplier, description, nextButtonId, enableSubmitButton) {
+        document.getElementById(buttonId).onclick = function (e) {
+            e.preventDefault();  // Prevent form submission
+
+            // Get the multiplied price from the template and convert to a float
+            var multipliedPrice = parseFloat("{{ multiplied_price }}");
+
+            // Ensure the value is valid
+            if (isNaN(multipliedPrice)) {
+                alert("Invalid price value.");
+                return;
+            }
+
+            // Multiply by 100 to convert INR to paise (1 INR = 100 paise)
+            var amount = multipliedPrice * amountMultiplier * 100;  // Amount in paise
+
+            var options = {
+                key: "{{ razorpay_api_key }}",  // Razorpay API key
+                "amount": amount,  // Amount in paise
+                "currency": "INR",  // Currency
+                "name": "Project Booking",  // Your company name
+                "description": description,  // Payment description
+                "order_id": "{{ razorpay_order_id }}",  // Dynamic order ID from the backend
+                "handler": function (response) {
+                    var payment_id = response.razorpay_payment_id;
+                    var order_id = response.razorpay_order_id;
+                    var signature = response.razorpay_signature;
+
+                    // Send payment details to the backend for verification
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{% url 'booking:booking_submit' %}";  // Correct URL path
+
+                    form.appendChild(createHiddenInput('razorpay_payment_id', payment_id));
+                    form.appendChild(createHiddenInput('razorpay_order_id', order_id));
+                    form.appendChild(createHiddenInput('razorpay_signature', signature));
+
+                    // Optionally disable the payment buttons to avoid re-clicking
+                    document.getElementById('rzp-button1').disabled = true;
+                    document.getElementById('rzp-button2').disabled = true;
+
+                    // Show the next payment button or enable Submit button
+                    if (nextButtonId) {
+                        document.getElementById(nextButtonId).style.display = 'inline-block';
+                    } else {
+                        document.getElementById('submit-booking').disabled = false;  // Enable Submit Booking button after second payment
+                    }
+
+                    document.body.appendChild(form);
+                    form.submit();
+                },
+                "prefill": {
+                    "name": document.getElementById('name').value,
+                    "contact": document.getElementById('phone').value
+                },
+                "theme": {
+                    "color": "#F37254"  // Customize your theme color
+                }
+            };
+
+            var rzp = new Razorpay(options);
+            rzp.open();  // Open Razorpay payment window
+        };
+    }
+
+    // Create hidden input elements to send payment details to the backend
+    function createHiddenInput(name, value) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        return input;
+    }
+
+    // Initialize Razorpay for both buttons
+    initiateRazorpayPayment('rzp-button1', 1, 'First Payment for Project Booking', 'rzp-button2', null);
+    initiateRazorpayPayment('rzp-button2', 2, 'Second Payment for Project Booking', null, true);
+</script>
+
+{% endblock %}

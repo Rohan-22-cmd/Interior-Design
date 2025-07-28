@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify OTP{% endblock %}
+
+{% block content %}
+<div class="otp-container">
+    <h2>Enter OTP</h2>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="text" name="otp" placeholder="Enter OTP" required>
+        <button class="imp" type="submit">Verify</button>
+    </form>
+</div>
+
+
+<style>
+    .otp-container {
+        background: #007bff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        margin: auto;
+        transform: translateY(7rem);
+        margin-bottom: 12rem;
+    }
+    
+    h2, p {
+        color: white;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid white;
+        border-radius: 8px;
+        background: #007bff;
+        color: white;
+    }
+
+    .imp, .resend-btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: white;
+        color: #007bff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: whitesmoke;
+    }
+</style>
+{% endblock %}
+
+
